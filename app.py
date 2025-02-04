@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 
 app = Flask(__name__)
 
-# Configure MySQL Database (Using MySQL Community Server)
+#Configure MySQL Database (Using MySQL Community Server)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root1234@127.0.0.1/capstone'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
