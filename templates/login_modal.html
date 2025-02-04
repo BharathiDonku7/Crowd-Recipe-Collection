@@ -1,0 +1,79 @@
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 mt-3">Login</button>
+                </form>
+
+                <p id="loginError" class="text-danger text-center mt-2"></p>
+
+                <hr>
+
+                <div class="text-center">
+                    <button class="btn btn-outline-dark w-100" data-bs-toggle="modal" data-bs-target="#signupModal">Create Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+    .modal-body {
+        padding: 30px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    input.form-control {
+        height: 45px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    .btn-success {
+        background-color: #5cb85c;
+        border-radius: 5px;
+        padding: 12px;
+        font-size: 16px;
+    }
+    .btn-outline-dark {
+        border-radius: 5px;
+        padding: 10px;
+    }
+</style>
+
+<!-- JavaScript (AJAX Login Request) -->
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    fetch("{{ url_for('login') }}", {
+        method: "POST",
+        body: new FormData(this)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            window.location.href = data.redirect;
+        } else {
+            document.getElementById("loginError").textContent = data.message;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("loginError").textContent = "An unexpected error occurred.";
+    });
+});
+</script>

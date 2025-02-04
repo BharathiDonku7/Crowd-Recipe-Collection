@@ -1,0 +1,97 @@
+<!-- Signup Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 mt-3">Sign Up</button>
+                </form>
+
+                <p id="signupError" class="text-danger text-center mt-2"></p>
+                <p id="signupSuccess" class="text-success text-center mt-2"></p> <!-- Success message -->
+
+                <hr>
+
+                <div class="text-center">
+                    <p class="text-muted">Already have an account?</p>
+                    <button class="btn btn-outline-dark w-100" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+    .modal-body {
+        padding: 30px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    input.form-control {
+        height: 45px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    .btn-success {
+        background-color: #5cb85c;
+        border-radius: 5px;
+        padding: 12px;
+        font-size: 16px;
+    }
+    .btn-outline-dark {
+        border-radius: 5px;
+        padding: 10px;
+    }
+</style>
+
+<!-- JavaScript (AJAX Signup Request) -->
+<script>
+document.getElementById("signupForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    fetch("{{ url_for('signup') }}", {
+        method: "POST",
+        body: new FormData(this)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // Show success message
+            document.getElementById("signupSuccess").textContent = data.message;
+            document.getElementById("signupError").textContent = ''; // Clear previous error messages
+
+            // Reset form fields
+            document.getElementById("signupForm").reset();
+
+            // Hide the modal after a short delay
+            setTimeout(function() {
+                $('#signupModal').modal('hide'); // Close modal
+                document.getElementById("signupSuccess").textContent = ''; // Clear message after closing
+            }, 2000);
+        } else {
+            // Show error message
+            document.getElementById("signupError").textContent = data.message;
+            document.getElementById("signupSuccess").textContent = ''; // Clear previous success messages
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("signupError").textContent = "An unexpected error occurred.";
+    });
+});
+</script>
